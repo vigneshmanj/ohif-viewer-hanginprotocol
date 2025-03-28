@@ -1,14 +1,14 @@
-Hanging Protocol Toolbar Implementation
+<h1>Hanging Protocol Toolbar Implementation</h2>
 
 This project enhances the OHIF Viewer by adding a Hanging Protocol Toolbar feature that allows users to switch between predefined imaging protocols (e.g., CT Chest, MRI Brain) through toolbar buttons.
 
-The implementation provides:
+<h2>The implementation provides:</h2>
 - Protocol-specific viewport configurations (Orientation, Tool Group, Synchronization)
 - Toolbar buttons with active highlighting
 - Protocol switching logic with validation
 - Error handling and logging for protocol changes
 
-🚀 Features
+<h2>🚀 Features</h2>
 - Toolbar Buttons  
   Easily switch protocols using toolbar buttons:  
   - Default
@@ -27,12 +27,7 @@ The implementation provides:
   - MRI & CT specific sync options
   - Multi-series display sets
 
-- Dropdown Interaction (Optional)  
-  Allows protocol switching via dropdown selection as well.
-
-
-
-🛠️ Hanging Protocol Configuration
+<h2>🛠️ Hanging Protocol Configuration</h2>
 
 Each protocol is defined with detailed viewport settings in `hpViewports.ts`:
 
@@ -52,7 +47,7 @@ const mriT1Axial: AppTypes.HangingProtocol.Viewport = {
 
 
 
-📄 Command Registration
+<h2>📄 Command Registration</h2>
 
 In `index.ts`, the `setHangingProtocol` command is registered:
 
@@ -69,7 +64,7 @@ commandsManager.registerCommand('DEFAULT', 'setHangingProtocol', {
 });
 ```
 
-🔥 Toolbar Button Configuration
+<h2>🔥 Toolbar Button Configuration</h2>
 
 In `toolbarbutton.ts`:
 
@@ -98,7 +93,7 @@ const protocolButton1 = {
 };
 ```
 
-🧩 How it works
+<h2>🧩 How it works</h2>
 
 1. Toolbar Buttons are created with `toolbarService.addButtons()` and associated with protocol IDs.
 2. On button click:
@@ -119,6 +114,6 @@ const protocolButton1 = {
 </pre>
 
 <h2>Screenshot of the commits made.</h2>
-![Screenshot 2025-03-28 115202](https://github.com/user-attachments/assets/a9b19070-3c95-48dd-8a8f-744fce489a8a)
+(https://github.com/user-attachments/assets/a9b19070-3c95-48dd-8a8f-744fce489a8a)
 
 
