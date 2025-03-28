@@ -144,6 +144,7 @@ export default class ToolbarService extends PubSubService {
     this._broadcastEvent(this.EVENTS.TOOL_BAR_MODIFIED, {
       ...this.state,
     });
+    console.log('✅ Buttons added to toolbar:', this.state.buttons);
   }
 
   /**
@@ -160,6 +161,7 @@ export default class ToolbarService extends PubSubService {
       [key: string]: unknown;
     }
   ) {
+    console.log(`🎯 Toolbar button clicked:`, interaction); // ✅ Debugging Log
     // if interaction is a string, we can assume it is the itemId
     // and get the props to get the other properties
     if (typeof interaction === 'string') {

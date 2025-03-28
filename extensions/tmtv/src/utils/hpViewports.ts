@@ -479,6 +479,80 @@ const mipSAGITTAL: AppTypes.HangingProtocol.Viewport = {
     },
   ],
 };
+const voiSync = (id: string) => ({
+  type: 'voi',
+  id,
+  source: true,
+  target: true,
+  options: {
+    syncColormap: true,
+  },
+});
+const mriT1Axial: AppTypes.HangingProtocol.Viewport = {
+  viewportOptions: {
+    viewportId: 'mriT1Axial',
+    viewportType: 'stack',
+    orientation: 'axial',
+    toolGroupId: 'mriToolGroup',
+    initialImageOptions: {
+      preset: 'first',
+    },
+    syncGroups: [cameraPositionSync('mriT1Sync'), voiSync('mriWLSync'), hydrateSegSync],
+  },
+  displaySets: [
+    {
+      id: 't1AxialDisplaySet',
+    },
+  ],
+};
+
+// MRI T2 Axial Viewport Configuration
+const mriT2Axial: AppTypes.HangingProtocol.Viewport = {
+  viewportOptions: {
+    viewportId: 'mriT2Axial',
+    viewportType: 'stack',
+    orientation: 'axial',
+    toolGroupId: 'mriToolGroup',
+    initialImageOptions: {
+      preset: 'first',
+    },
+    syncGroups: [cameraPositionSync('mriT2Sync'), voiSync('mriWLSync'), hydrateSegSync],
+  },
+  displaySets: [
+    {
+      id: 't2AxialDisplaySet',
+    },
+  ],
+};
+
+// MRI FLAIR Axial Viewport Configuration
+const mriFLAIRAxial: AppTypes.HangingProtocol.Viewport = {
+  viewportOptions: {
+    viewportId: 'mriFLAIRAxial',
+    viewportType: 'stack',
+    orientation: 'axial',
+    toolGroupId: 'mriToolGroup',
+    initialImageOptions: {
+      preset: 'first',
+    },
+    syncGroups: [cameraPositionSync('mriFLAIRSync'), voiSync('mriWLSync'), hydrateSegSync],
+  },
+  displaySets: [
+    {
+      id: 'flairAxialDisplaySet',
+    },
+  ],
+};
+
+// Empty Viewport Configuration (for the 4th viewport)
+const emptyViewport: AppTypes.HangingProtocol.Viewport = {
+  viewportOptions: {
+    viewportId: 'emptyViewport',
+    viewportType: 'none',
+    toolGroupId: 'emptyToolGroup',
+  },
+  displaySets: [],
+};
 
 export {
   ctAXIAL,
@@ -491,4 +565,8 @@ export {
   fusionSAGITTAL,
   fusionCORONAL,
   mipSAGITTAL,
+  mriT1Axial,
+  mriT2Axial,
+  mriFLAIRAxial,
+  emptyViewport,
 };

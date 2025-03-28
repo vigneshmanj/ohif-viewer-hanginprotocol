@@ -2,6 +2,8 @@ import { hpMN, hpMN8 } from './hangingprotocols/hpMNGrid';
 import hpMNCompare from './hangingprotocols/hpCompare';
 import hpMammography from './hangingprotocols/hpMammo';
 import hpScale from './hangingprotocols/hpScale';
+import hpCTChest from './hangingprotocols/hpCTChest';
+import hpMRIBrain from './hangingprotocols/hpMRIBrain';
 
 const defaultProtocol = {
   id: 'default',
@@ -148,6 +150,14 @@ function getHangingProtocolModule() {
     {
       name: hpMN8.id,
       protocol: hpMN8,
+    },
+    {
+      name: hpCTChest.id,
+      protocol: hpCTChest,
+    },
+    {
+      name: hpMRIBrain.id,
+      protocol: hpMRIBrain,
     },
   ];
 }

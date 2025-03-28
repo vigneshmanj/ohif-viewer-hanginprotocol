@@ -157,6 +157,8 @@ import {
   LayoutCommon2x3,
   LayoutAdvanced3DFourUp,
   LayoutAdvanced3DMain,
+  LayoutCTChest,
+  LayoutMRIBrain,
 } from './Sources/Layout';
 import Link from './Sources/Link';
 import IconColorLUT from './Sources/IconColorLUT';
@@ -705,6 +707,8 @@ export const Icons = {
   'layout-advanced-3d-only': (props: IconProps) => LayoutAdvanced3DOnly(props),
   'layout-advanced-3d-primary': (props: IconProps) => LayoutAdvanced3DPrimary(props),
   'layout-advanced-axial-primary': (props: IconProps) => LayoutAdvancedAxialPrimary(props),
+  'layout-ct-chest': (props: IconProps) => LayoutCTChest(props),
+  'layout-mri-brain': (props: IconProps) => LayoutMRIBrain(props),
   'layout-advanced-mpr': (props: IconProps) => LayoutAdvancedMPR(props),
   'layout-common-1x1': (props: IconProps) => LayoutCommon1x1(props),
   'layout-common-1x2': (props: IconProps) => LayoutCommon1x2(props),

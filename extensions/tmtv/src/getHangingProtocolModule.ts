@@ -6,6 +6,10 @@ import {
   fusionCORONAL,
   fusionSAGITTAL,
   mipSAGITTAL,
+  mriT1Axial,
+  mriT2Axial,
+  mriFLAIRAxial,
+  emptyViewport,
   ptAXIAL,
   ptCORONAL,
   ptSAGITTAL,
@@ -121,7 +125,7 @@ const stage2 = {
       columns: 2,
     },
   },
-  viewports: [ctAXIAL, fusionAXIAL, ptAXIAL, mipSAGITTAL],
+  viewports: [ctAXIAL, fusionAXIAL, ptAXIAL, mipSAGITTAL, mriT1Axial, mriT2Axial, mriFLAIRAxial],
 };
 
 /**

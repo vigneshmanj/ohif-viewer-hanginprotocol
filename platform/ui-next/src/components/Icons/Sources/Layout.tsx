@@ -1,5 +1,87 @@
 import React from 'react';
 import type { IconProps } from '../types';
+export const LayoutCTChest = (props: IconProps) => (
+  <svg
+    width="29px"
+    height="18px"
+    viewBox="0 0 29 18"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <g
+      id="Layout-select----FINAL"
+      stroke="none"
+      strokeWidth="1"
+      fill="none"
+      fillRule="evenodd"
+    >
+      <g
+        id="layout-ct-chest"
+        transform="translate(1, 1)"
+        stroke="currentColor"
+      >
+        <rect
+          id="Rectangle"
+          x="0"
+          y="0"
+          width="27"
+          height="16.2"
+          rx="2"
+        ></rect>
+        <path
+          id="Vertical-Line"
+          d="M13.5,0 L13.5,16.2"
+        ></path>
+        <path
+          id="Horizontal-Line"
+          d="M0,8.1 L27,8.1"
+        ></path>
+      </g>
+    </g>
+  </svg>
+);
+export const LayoutMRIBrain = (props: IconProps) => (
+  <svg
+    width="29px"
+    height="18px"
+    viewBox="0 0 29 18"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <g
+      id="Layout-select----FINAL"
+      stroke="none"
+      strokeWidth="1"
+      fill="none"
+      fillRule="evenodd"
+    >
+      <g
+        id="layout-mri-brain"
+        transform="translate(1, 1)"
+        stroke="currentColor"
+      >
+        <rect
+          id="Rectangle"
+          x="0"
+          y="0"
+          width="27"
+          height="16.2"
+          rx="2"
+        ></rect>
+        <path
+          id="Vertical-Line-Left"
+          d="M9,0 L9,16.2"
+        ></path>
+        <path
+          id="Vertical-Line-Right"
+          d="M18,0 L18,16.2"
+        ></path>
+      </g>
+    </g>
+  </svg>
+);
 
 export const LayoutAdvanced3DFourUp = (props: IconProps) => (
   <svg

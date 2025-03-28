@@ -1,7 +1,7 @@
 import type { Button } from '@ohif/core/types';
-
 import { EVENTS } from '@cornerstonejs/core';
 import { ViewportGridService } from '@ohif/core';
+import getHangingProtocolModule from '../../../extensions/default/src/getHangingProtocolModule';
 
 const ReferenceLinesListeners = [
   {
@@ -16,9 +16,229 @@ export const setToolActiveToolbar = {
     toolGroupIds: ['default', 'mpr', 'SRToolGroup', 'volume3d'],
   },
 };
+export const setHangingProtocolCommand = {
+  commandName: 'setHangingProtocol',
+  commandOptions: {
+    toolGroupIds: ['default'],
+  },
+};
+//Very right
+// const protocolButton = {
+//   id: 'ProtocolSelector',
+//   uiType: 'ohif.splitButton',
+//   props: {
+//     type: 'tool',
+//     primary: {
+//       id: 'ProtocolSelector',
+//       icon: 'tool-layout',
+//       label: 'Protocols',
+//       tooltip: 'Select Protocol',
+//       commands: [
+//         {
+//           commandName: 'setHangingProtocol',
+//           commandOptions: { protocolId: 'mribrain' }, // Set "ctchest" as default
+//           context: 'DEFAULT',
+//         },
+//       ],
+//       evaluateActiveClass: ({ servicesManager }) => {
+//         const { hangingProtocolService } = servicesManager.services;
+//         const activeProtocol = hangingProtocolService.getActiveProtocol(); // Get the active protocol
 
+//         return activeProtocol?.id === 'ctchest' ? 'active' : ''; // Highlight "ctchest" by default
+//       },
+//     },
+//     secondary: {
+//       icon: 'chevron-down',
+//       tooltip: 'More Protocols',
+//     },
+//     items: [
+//       {
+//         id: 'ctchest', // First option: CT Chest as the default
+//         label: 'CT Chest',
+//         icon: 'tool-layout',
+//         commands: [
+//           {
+//             commandName: 'setHangingProtocol',
+//             commandOptions: { protocolId: 'ctchest' },
+//             context: 'DEFAULT',
+//           },
+//         ],
+//         evaluateActiveClass: ({ servicesManager }) => {
+//           const { hangingProtocolService } = servicesManager.services;
+//           return hangingProtocolService.getActiveProtocol()?.id === 'ctchest' ? 'active' : '';
+//         },
+//       },
+//       {
+//         id: 'default',
+//         label: 'Default',
+//         icon: 'tool-layout',
+//         commands: [
+//           {
+//             commandName: 'setHangingProtocol',
+//             commandOptions: { protocolId: 'default' },
+//             context: 'DEFAULT',
+//           },
+//         ],
+//         evaluateActiveClass: ({ servicesManager }) => {
+//           const { hangingProtocolService } = servicesManager.services;
+//           return hangingProtocolService.getActiveProtocol()?.id === 'default' ? 'active' : '';
+//         },
+//       },
+//       {
+//         id: 'mribrain',
+//         label: 'MRI Brain',
+//         icon: 'tool-layout',
+//         commands: [
+//           {
+//             commandName: 'setHangingProtocol',
+//             commandOptions: { protocolId: 'mribrain' },
+//             context: 'DEFAULT',
+//           },
+//         ],
+//         evaluateActiveClass: ({ servicesManager }) => {
+//           const { hangingProtocolService } = servicesManager.services;
+//           return hangingProtocolService.getActiveProtocol()?.id === 'mribrain' ? 'active' : '';
+//         },
+//       },
+//     ],
+//   },
+// };
+// Add individual buttons
+// Add the protocol selector button to the toolbar
+const protocolButton = {
+  id: 'ProtocolSelector',
+  uiType: 'ohif.toolButton',
+  props: {
+    id: 'ProtocolSelector',
+    icon: 'tool-layout',
+    label: 'Default',
+    tooltip: 'Default',
+    commands: [
+      {
+        commandName: 'setHangingProtocol',
+        commandOptions: { protocolId: 'default' }, // Simplified default
+        context: 'DEFAULT',
+      },
+    ],
+    evaluateActiveClass: ({ servicesManager }) => {
+      const { hangingProtocolService } = servicesManager.services;
+      const activeProtocol = hangingProtocolService.getActiveProtocol();
+      return activeProtocol?.id === 'default' ? 'active' : '';
+    },
+  },
+};
+//     secondary: {
+//       icon: 'chevron-down',
+//       tooltip: 'More Protocols',
+//     },
+//     items: [
+//       {
+//         id: 'ctchest',
+//         label: 'CT Chest',
+//         icon: 'tool-layout',
+//         commands: [
+//           {
+//             commandName: 'setHangingProtocol',
+//             commandOptions: { protocolId: 'ctchest' },
+//             context: 'DEFAULT',
+//           },
+//         ],
+//         evaluateActiveClass: ({ servicesManager }) => {
+//           const { hangingProtocolService } = servicesManager.services;
+//           return hangingProtocolService.getActiveProtocol()?.id === 'ctchest' ? 'active' : '';
+//         },
+//       },
+//       {
+//         id: 'default',
+//         label: 'Default',
+//         icon: 'tool-layout',
+//         commands: [
+//           {
+//             commandName: 'setHangingProtocol',
+//             commandOptions: { protocolId: 'default' },
+//             context: 'DEFAULT',
+//           },
+//         ],
+//         evaluateActiveClass: ({ servicesManager }) => {
+//           const { hangingProtocolService } = servicesManager.services;
+//           return hangingProtocolService.getActiveProtocol()?.id === 'default' ? 'active' : '';
+//         },
+//       },
+//       {
+//         id: 'mribrain',
+//         label: 'MRI Brain',
+//         icon: 'tool-layout',
+//         commands: [
+//           {
+//             commandName: 'setHangingProtocol',
+//             commandOptions: { protocolId: 'mribrain' },
+//             context: 'DEFAULT',
+//           },
+//         ],
+//         evaluateActiveClass: ({ servicesManager }) => {
+//           const { hangingProtocolService } = servicesManager.services;
+//           return hangingProtocolService.getActiveProtocol()?.id === 'mribrain' ? 'active' : '';
+//         },
+//       },
+//     ],
+//   },
+// };
+
+const protocolButton1 = {
+  id: 'ProtocolSelector1',
+  uiType: 'ohif.toolButton',
+  props: {
+    type: 'tool',
+    id: 'ProtocolSelector1',
+    icon: 'tool-layout',
+    label: 'CT Chest',
+    tooltip: 'CT Chest',
+    commands: [
+      {
+        commandName: 'setHangingProtocol',
+        commandOptions: { protocolId: 'ctchest' }, // Set "ctchest" as default
+        context: 'DEFAULT',
+      },
+    ],
+    evaluateActiveClass: ({ servicesManager }) => {
+      const { hangingProtocolService } = servicesManager.services;
+      const activeProtocol = hangingProtocolService.getActiveProtocol(); // Get the active protocol
+
+      return activeProtocol?.id === 'ctchest' ? 'active' : ''; // Highlight "ctchest" by default
+    },
+  },
+};
+const protocolButton2 = {
+  id: 'ProtocolSelector2',
+  uiType: 'ohif.toolButton',
+  props: {
+    type: 'tool',
+    id: 'ProtocolSelector2',
+    icon: 'tool-layout',
+    label: 'MRI Brain',
+    tooltip: 'MRI Brain',
+    commands: [
+      {
+        commandName: 'setHangingProtocol',
+        commandOptions: { protocolId: 'mribrain' }, // Set "ctchest" as default
+        context: 'DEFAULT',
+      },
+    ],
+    evaluateActiveClass: ({ servicesManager }) => {
+      const { hangingProtocolService } = servicesManager.services;
+      const activeProtocol = hangingProtocolService.getActiveProtocol(); // Get the active protocol
+
+      return activeProtocol?.id === 'ctchest' ? 'active' : ''; // Highlight "ctchest" by default
+    },
+  },
+};
+
+// Apply last selected protocol automatically
 const toolbarButtons: Button[] = [
   // sections
+  protocolButton,
+  protocolButton1,
+  protocolButton2,
   {
     id: 'MeasurementTools',
     uiType: 'ohif.toolButtonList',
@@ -35,6 +255,11 @@ const toolbarButtons: Button[] = [
       groupId: 'MoreTools',
     },
   },
+
+  // ... existing imports ...
+
+  // ... other button configurations ...
+
   // tool defs
   {
     id: 'Reset',

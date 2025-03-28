@@ -82,15 +82,138 @@ function modeFactory({ modeConfiguration }) {
      * Lifecycle hooks
      */
     onModeEnter: function ({ servicesManager, extensionManager, commandsManager }: withAppTypes) {
-      const { measurementService, toolbarService, toolGroupService } = servicesManager.services;
+      const { measurementService, toolbarService, toolGroupService, hangingProtocolService } =
+        servicesManager.services;
+      commandsManager.createContext({
+        id: 'DEFAULT',
+        context: {
+          servicesManager,
+          hangingProtocolService,
+          measurementService,
+          toolbarService,
+        },
+      });
 
+      commandsManager.registerCommand('DEFAULT', 'setHangingProtocol', {
+        commandFn: ({ protocolId }) => {
+          // Validate protocol ID
+          const validProtocols = ['default', 'ctchest', 'mribrain'];
+
+          if (!protocolId) {
+            console.error('No protocol ID received');
+            return Promise.reject('No protocol ID');
+          }
+
+          if (!validProtocols.includes(protocolId)) {
+            console.error(`Invalid protocol ID: ${protocolId}`);
+            return Promise.reject(`Invalid protocol ID: ${protocolId}`);
+          }
+
+          console.log('Attempting to apply protocol:', protocolId);
+
+          // Wrap with Promise and add comprehensive error handling
+          return new Promise((resolve, reject) => {
+            try {
+              // Type assertion to handle potential void return
+              const result = hangingProtocolService.setProtocol(protocolId) as unknown;
+
+              // Check if result is potentially a Promise
+              if (result && typeof (result as Promise<any>).then === 'function') {
+                (result as Promise<any>)
+                  .then(() => {
+                    console.log('Protocol applied successfully:', protocolId);
+                    resolve();
+                  })
+                  .catch(error => {
+                    console.error('Failed to apply protocol:', error);
+                    reject(error);
+                  });
+              } else {
+                console.log('Protocol applied successfully:', protocolId);
+                resolve(result);
+              }
+            } catch (error) {
+              console.error('Unexpected error applying protocol:', error);
+              reject(error);
+            }
+          });
+        },
+      });
       measurementService.clearMeasurements();
-
-      // Init Default and SR ToolGroups
       initToolGroups(extensionManager, toolGroupService, commandsManager);
 
-      toolbarService.addButtons(toolbarButtons);
+      // Ensure dropdown interaction is captured
+      toolbarService.addButtons(
+        toolbarButtons
+          .map(btn => {
+            if (['ProtocolSelector', 'ProtocolSelector1', 'ProtocolSelector2'].includes(btn.id)) {
+              return {
+                ...btn,
+                onClick: () => {
+                  console.log(`Button clicked: ${btn.id}`);
+
+                  const dropdownElement = document.getElementById(`${btn.id}Dropdown`);
+                  if (dropdownElement) {
+                    dropdownElement.classList.toggle('show');
+                  } else {
+                    console.warn(`Dropdown element not found for ${btn.id}`);
+                  }
+                },
+              };
+            }
+
+            // Extract protocol options as separate buttons for all ProtocolSelectors
+            if (
+              ['ProtocolSelector', 'ProtocolSelector1', 'ProtocolSelector2'].includes(btn.id) &&
+              btn.props?.items
+            ) {
+              const protocolButtons = btn.props.items.map(item => ({
+                id: `${btn.id}-${item.id}`, // Unique ID for each dropdown item
+                label: item.label,
+                icon: item.icon,
+                onClick: () => {
+                  console.log(`Button clicked: ${item.id}`);
+
+                  if (!item.commands || item.commands.length === 0) {
+                    console.warn(`No commands found for button: ${item.id}`);
+                    return;
+                  }
+
+                  // Execute the command
+                  const command = item.commands[0];
+                  if (command.commandName === 'setHangingProtocol') {
+                    const protocolId = command.commandOptions?.protocolId;
+                    console.log(`Applying Hanging Protocol: ${protocolId}`);
+
+                    // Run the command
+                    commandsManager.runCommand('setHangingProtocol', { protocolId });
+                  } else {
+                    console.warn('Invalid protocol command for:', item.id);
+                  }
+                },
+              }));
+
+              return [...protocolButtons]; // Merge protocol buttons into the toolbar
+            }
+
+            return btn; // Return unchanged button if not a ProtocolSelector
+          })
+          .flat() // Flatten to merge buttons
+      );
+
+      const dropdownElement = document.getElementById('ProtocolSelectorDropdown');
+      if (dropdownElement) {
+        dropdownElement.addEventListener('change', event => {
+          const selectedProtocolId = event.target.value;
+          console.log(`Dropdown selected: ${selectedProtocolId}`);
+          commandsManager.runCommand('setHangingProtocol', { protocolId: selectedProtocolId });
+        });
+      }
+
       toolbarService.createButtonSection('primary', [
+        'ProtocolSelector',
+        'ProtocolSelector1',
+        'ProtocolSelector2',
         'MeasurementTools',
         'Zoom',
         'Pan',
@@ -134,35 +257,6 @@ function modeFactory({ modeConfiguration }) {
         'UltrasoundDirectionalTool',
         'WindowLevelRegion',
       ]);
-
-      // // ActivatePanel event trigger for when a segmentation or measurement is added.
-      // // Do not force activation so as to respect the state the user may have left the UI in.
-      // _activatePanelTriggersSubscriptions = [
-      //   ...panelService.addActivatePanelTriggers(
-      //     cornerstone.segmentation,
-      //     [
-      //       {
-      //         sourcePubSubService: segmentationService,
-      //         sourceEvents: [segmentationService.EVENTS.SEGMENTATION_ADDED],
-      //       },
-      //     ],
-      //     true
-      //   ),
-      //   ...panelService.addActivatePanelTriggers(
-      //     tracked.measurements,
-      //     [
-      //       {
-      //         sourcePubSubService: measurementService,
-      //         sourceEvents: [
-      //           measurementService.EVENTS.MEASUREMENT_ADDED,
-      //           measurementService.EVENTS.RAW_MEASUREMENT_ADDED,
-      //         ],
-      //       },
-      //     ],
-      //     true
-      //   ),
-      //   true,
-      // ];
     },
     onModeExit: ({ servicesManager }: withAppTypes) => {
       const {
@@ -253,7 +347,135 @@ function modeFactory({ modeConfiguration }) {
     ],
     extensions: extensionDependencies,
     // Default protocol gets self-registered by default in the init
-    hangingProtocol: 'default',
+    // hangingProtocolService: {
+    //   protocols: ['default', 'ct-chest', 'mri-brain'],
+    //   defaultProtocol: 'default',
+    //   autoProtocol: true,
+    //   protocolMatchingRules: [
+    //     {
+    //       id: 'ct-chest',
+    //       modality: 'CT',
+    //       bodyPart: 'CHEST',
+    //     },
+    //     {
+    //       id: 'mri-brain',
+    //       modality: 'MR',
+    //       bodyPart: 'BRAIN',
+    //     },
+    //   ],
+    // },
+    hangingProtocolService: {
+      protocols: ['default', 'ct-chest', 'mri-brain'],
+      defaultProtocol: 'default',
+      autoProtocol: true,
+      protocolMatchingRules: [
+        {
+          id: 'ct-chest',
+          modality: 'CT',
+          bodyPart: 'CHEST',
+          stages: [
+            {
+              name: 'ct-chest-mpr',
+              viewportStructure: {
+                layoutType: 'grid',
+                properties: {
+                  rows: 1,
+                  columns: 3,
+                },
+              },
+              viewports: [
+                {
+                  viewportOptions: {
+                    viewportType: 'volume',
+                    orientation: 'axial',
+                    toolGroupId: 'default',
+                  },
+                },
+                {
+                  viewportOptions: {
+                    viewportType: 'volume',
+                    orientation: 'sagittal',
+                    toolGroupId: 'default',
+                  },
+                },
+                {
+                  viewportOptions: {
+                    viewportType: 'volume',
+                    orientation: 'coronal',
+                    toolGroupId: 'default',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'mri-brain',
+          modality: 'MR',
+          bodyPart: 'BRAIN',
+          stages: [
+            {
+              name: 'mri-brain-multisequence',
+              viewportStructure: {
+                layoutType: 'grid',
+                properties: {
+                  rows: 2,
+                  columns: 2,
+                },
+              },
+              viewports: [
+                {
+                  viewportOptions: {
+                    viewportType: 'stack',
+                    toolGroupId: 'default',
+                  },
+                  displaySets: [
+                    {
+                      seriesMatchingRules: [
+                        { attribute: 'SeriesDescription', constraint: { contains: 'T1' } },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  viewportOptions: {
+                    viewportType: 'stack',
+                    toolGroupId: 'default',
+                  },
+                  displaySets: [
+                    {
+                      seriesMatchingRules: [
+                        { attribute: 'SeriesDescription', constraint: { contains: 'T2' } },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  viewportOptions: {
+                    viewportType: 'stack',
+                    toolGroupId: 'default',
+                  },
+                  displaySets: [
+                    {
+                      seriesMatchingRules: [
+                        { attribute: 'SeriesDescription', constraint: { contains: 'FLAIR' } },
+                      ],
+                    },
+                  ],
+                },
+                // Fourth viewport intentionally left empty for 2x2 layout
+                {
+                  viewportOptions: {
+                    viewportType: 'stack',
+                    toolGroupId: 'default',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
     // Order is important in sop class handlers when two handlers both use
     // the same sop class under different situations.  In that case, the more
     // general handler needs to come last.  For this case, the dicomvideo must
