@@ -102,7 +102,7 @@ const protocolButton1 = {
 3. The active protocol is highlighted in the UI.
 4. Optional: Dropdown support added to select protocols dynamically.
 
-<h2>📂 Project Structure - Hanging Protocol Integration</h2>
+<h2>📂 Project Structure - Hanging Protocol Integration(Files to which changes were made)</h2>
 
 <pre>
 ├── <strong>toolbarbutton.ts</strong>              → modes/longitudinal/src/toolbarButtons.ts
@@ -113,7 +113,7 @@ const protocolButton1 = {
 ├── <strong>hpViewports.ts</strong>                → extensions/tmtv/src/utils/hpViewports.ts
 </pre>
 
-<h2>Screenshot of the commits made.</h2>
+
 
 
 
