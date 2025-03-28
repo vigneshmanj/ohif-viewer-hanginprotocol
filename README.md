@@ -8,17 +8,6 @@ The implementation provides:
 - Protocol switching logic with validation
 - Error handling and logging for protocol changes
 
-🗂️ Project file location(files to which changes where made)
-
-
-├── toolbarbutton.ts          modes/longitudinal/src/toolbarButtons.ts
-├── getHangingProtocolModule.js extensions/default/src/getHangingProtocolModule.js
-├── index.ts                 modes/longitudinal/src/index.ts
-├── hpCTChest                extensions/default/src/hangingprotocols/hpCTChest.ts
-├── hpMRIBrain               extensions/default/src/hangingprotocols/hpMRIBrain.ts
-├── hpViewports.ts           extensions/tmtv/src/utils/hpViewports.ts
-
-
 🚀 Features
 - Toolbar Buttons  
   Easily switch protocols using toolbar buttons:  
@@ -118,6 +107,18 @@ const protocolButton1 = {
 3. The active protocol is highlighted in the UI.
 4. Optional: Dropdown support added to select protocols dynamically.
 
+<h2>📂 Project Structure - Hanging Protocol Integration</h2>
 
+<pre>
+├── <strong>toolbarbutton.ts</strong>              → modes/longitudinal/src/toolbarButtons.ts
+├── <strong>getHangingProtocolModule.js</strong>   → extensions/default/src/getHangingProtocolModule.js
+├── <strong>index.ts</strong>                      → modes/longitudinal/src/index.ts
+├── <strong>hpCTChest.ts</strong>                  → extensions/default/src/hangingprotocols/hpCTChest.ts
+├── <strong>hpMRIBrain.ts</strong>                 → extensions/default/src/hangingprotocols/hpMRIBrain.ts
+├── <strong>hpViewports.ts</strong>                → extensions/tmtv/src/utils/hpViewports.ts
+</pre>
+
+<h2>Screenshot of the commits made.</h2>
+![Screenshot 2025-03-28 115202](https://github.com/user-attachments/assets/a9b19070-3c95-48dd-8a8f-744fce489a8a)
 
 
